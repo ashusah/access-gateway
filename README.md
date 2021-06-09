@@ -82,3 +82,18 @@ If no appropriate session and csrf token is received on resource request, an acc
 GET "http://localhost:8080/level1/low_access.html?XSRF=75DA5FAF2470BAA3_1581848921"
 
 XSRF token should always be used with the header option for passing the csrf cookie token value to server, example above is just for simple browser tests.
+
+
+#### Changes by Ashu Austin Sah
+
+1. Introduced Anonymous access level. Any request can access the resources under this level.
+
+        Anonymous resource end points - 
+        1.   "http://localhost/Anon/css/main.css"
+        2.   "http://localhost/Anon/js/main.js"
+
+2. Fix sonar code smells
+
+3. Rename methods 
+
+4. Introduce more custom exceptions

@@ -60,7 +60,7 @@ public class SessionService {
                 Comparator.nullsLast(Comparator.reverseOrder()))).findFirst();
     }
 
-    public Optional<String> authenticatedSession() {
+    public Optional<String> getAuthenticatedSession() {
         final String username = LogonUserService.getCurrentUser().orElseThrow(()
                 -> new RuntimeException("unknown user requesting session!"));
         final Access level = LogonUserService.getCurrentAccessLevel().orElseThrow(()

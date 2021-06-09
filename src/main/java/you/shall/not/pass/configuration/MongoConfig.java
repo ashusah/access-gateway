@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
+import you.shall.not.pass.exception.MongoException;
 
 
 @Configuration
@@ -25,11 +26,11 @@ public class MongoConfig {
     @Bean
     public MongoDbFactory mongoDbFactory() {
         if (port == 0) {
-            throw new RuntimeException("No port provided for mongo db, failed connection to db!");
+            throw new MongoException("No port provided for mongo db, failed connection to db!");
         }
 
         if (host == null) {
-            throw new RuntimeException("No host provided for mongo db, failed connection to db!");
+            throw new MongoException("No host provided for mongo db, failed connection to db!");
         }
 
         String connectionURL = "mongodb://"+ host+":" + port;

@@ -36,8 +36,8 @@ public class GateController {
     @GetMapping({"/access"})
     public ResponseEntity<String> access(HttpServletResponse response) {
         Success.SuccessBuilder builder = Success.builder();
-        Optional<String> optionalSession = sessionService.authenticatedSession();
-        optionalSession.ifPresent(session -> {
+        Optional<String> authenticatedSession = sessionService.getAuthenticatedSession();
+        authenticatedSession.ifPresent(session -> {
             String csrf = csrfProtectionService.getCsrfCookie();
             cookieService.addCookie(csrf, response);
             cookieService.addCookie(session, response);

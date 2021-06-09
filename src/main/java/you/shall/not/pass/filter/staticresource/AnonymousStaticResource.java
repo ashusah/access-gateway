@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class AnonymousStaticResource implements StaticResourceValidator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HighLevelStaticResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AnonymousStaticResource.class);
 
     @Value("classpath:static/Anon/**")
     private Resource[] level0;
