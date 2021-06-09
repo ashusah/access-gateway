@@ -32,10 +32,10 @@ public class CustomUserDetailService implements UserDetailsService {
         char[] password;
     }
 
-    private UserGrantDetail getDetails(String lvl, User user)throws UsernameNotFoundException {
+    private UserGrantDetail getDetails(String accessLevel, User user)throws UsernameNotFoundException {
         UserGrantDetail.UserGrantDetailBuilder builder = UserGrantDetail.builder();
         Set<GrantedAuthority> grants = new HashSet<>();
-        Access grant = Access.find(lvl).orElseThrow(()
+        Access grant = Access.getAccessEnum(accessLevel).orElseThrow(()
                 -> new UsernameNotFoundException("requested grant not supported"));
         builder.userName(user.getUserName());
         if (Access.Level1 == grant) {

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import you.shall.not.pass.exception.CsrfViolationException;
+import you.shall.not.pass.exception.ExpiredSessionException;
 import you.shall.not.pass.service.CsrfProtectionService;
 import you.shall.not.pass.domain.Access;
 import you.shall.not.pass.domain.Session;
@@ -64,7 +65,19 @@ public class SecurityFilter implements Filter {
         } catch (CsrfViolationException cve) {
             LOG.warn("CSRF violation, {}", cve.getMessage());
             processCsrfViolation((HttpServletResponse) response, cve);
+        } catch (ExpiredSessionException exception) {
+            LOG.warn("Expired Session, {}", exception.getMessage());
+            processExpiredSessionError((HttpServletResponse) response, exception);
         }
+    }
+
+    private void processExpiredSessionError(HttpServletResponse response, ExpiredSessionException exception) {
+        Violation violation = Violation.builder()
+                .message(exception.getMessage())
+                .build();
+
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        writeResponse(response, gson.toJson(violation));
     }
 
     private void processCsrfViolation(HttpServletResponse response, CsrfViolationException cve) {
@@ -97,10 +110,12 @@ public class SecurityFilter implements Filter {
         final Optional<StaticResourceValidator> resourceValidator = getValidator(requestedUri);
         resourceValidator.ifPresent(validator -> {
             LOG.info("resource validator enforced {}", validator.requires());
-            if (sessionService.isExpiredSession(sessionByToken)
-                    || validator.requires().levelIsHigher(grant)) {
+
+            if (sessionService.isExpiredSession(sessionByToken))
+                throw new ExpiredSessionException("Session is expired");
+            if(validator.requires().levelIsHigher(grant))
                 throw new AccessGrantException(validator.requires(), "invalid access level");
-            }
+
             csrfProtectionService.validateCsrfCookie(request);
         });
     }

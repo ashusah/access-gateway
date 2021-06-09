@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Access {
+    ANONYMOUS(0),
     Level1(1),
     Level2(2);
 
@@ -13,7 +14,7 @@ public enum Access {
         this.level = level;
     }
 
-    public static Optional<Access> find(String lvl) {
+    public static Optional<Access> getAccessEnum(String lvl) {
         return Arrays.stream(Access.values()).filter(gateKeeperGrant ->
                 gateKeeperGrant.level == Integer.valueOf(lvl)).findFirst();
     }
